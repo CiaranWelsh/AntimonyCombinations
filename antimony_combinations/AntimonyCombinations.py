@@ -22,13 +22,18 @@ LOG = logging.getLogger(__name__)
 
 
 class HypothesisExtension:
-
-    def __init__(self, name, reaction, rate_law, mode='additive', to_repalce=None):
+    """
+    Data class for storing information about a hypothesis extension. For usage
+    see :py:class:`Combinations`.
+    """
+    def __init__(self, name, reaction,
+                 rate_law, mode='additive',
+                 to_replace=None):
         self.name = name
         self.reaction = reaction
         self.rate_law = rate_law
         self.mode = mode
-        self.to_replace = to_repalce
+        self.to_replace = to_replace
 
         for i in [self.name, self.reaction, self.rate_law, self.mode]:
             if not isinstance(i, str):
@@ -43,8 +48,179 @@ class HypothesisExtension:
 
 class Combinations:
     """
-    build a factory that churns out functions that return models and take as argument the
-    antimony parameter strings
+    Builds combinations of SBML model using antimony
+
+    Create every combination of core hypothesis and extension hypotheses and creates
+    SBML models using antimony from the tellurium package.
+
+    :py:class:`Combinations` is designed to be subclassed. The necessary user input
+    is given by overriding core functions and providing hypothesis extensions.
+
+    The following methods must be implemented:
+
+        * :py:meth:`core__reactions`
+        * :py:meth:`core__parameters`
+        * :py:meth:`core__variables`
+
+    However the following methods are optional:
+
+        * :py:meth:`core__functions`
+        * :py:meth:`core__events`
+        * :py:meth:`core__units`
+
+    Each of these methods should return a valid antimony string since these strings
+    are used to build up a full antimony model.
+
+    Extension hypotheses are added by adding methods to your subclass that
+    begin with `extension_hypothesis__`. Any method that begins with `extension_hypothesis__`
+    will be picked up and used to combinatorially build sbml models.
+
+    Any `extension_hypothesis__` method should return an instance of the
+    :py:class:`HypothesisExtension` class, which is merely a container for
+    some needed information.
+
+    Extension Hypotheses can operate in either `additive` or `replace` mode,
+    depending on how the models should be combined. `additive` is simpler. An extension
+    hypothesis is additive when your reaction doesn't override another, or make
+    another reaction superflous. Examples of such instances might be
+    when adding a mass action reaction to a preexisting set of mass action
+    reactions.
+
+    `replace` mode on the other hand should be used when your
+    reaction should be used *instead* of another reaction.
+
+    Examples
+    --------
+
+    class MyCombModel(Combinations):
+
+        # no __init__ is necessary as we use the __init__ from parent class
+
+        def core__functions(self):
+            return ''' '''
+
+        def core__variables(self):
+            return '''
+compartment Cell;
+var A in Cell;
+var pA in Cell;
+var B in Cell;
+var pB in Cell;
+var C in Cell;
+var pC in Cell;
+
+const S in Cell
+'''
+
+        def core__reactions(self):
+            return '''
+R1f: A -> pA; k1f*A*S;
+R2f: B -> pB; k2f*B*A;
+R3f: C -> pC; k3f*C*B;
+'''
+
+        def core__parameters(self):
+            return '''
+k1f    = 0.1;
+k2f    = 0.1;
+k3f    = 0.1;
+
+k2b    = 0.1;
+k3b    = 0.1;
+VmaxB  = 0.1;
+kmB    = 0.1;
+VmaxA  = 0.1;
+kmA    = 0.1;
+k4     = 0.1;
+'''
+
+        def core__units(self):
+            return None  # Not needed for now
+
+        def core__events(self):
+            return None  # No events needed
+
+        def extension_hypothesis__additive1(self):
+            return HypothesisExtension(
+                name='AdditiveReaction1',
+                reaction='pB -> B',
+                rate_law='k2b * pB',
+                mode='additive',
+                to_replace=None,  # not needed for additive mode
+            )
+
+        def extension_hypothesis__additive2(self):
+            return HypothesisExtension(
+                name='AdditiveReaction2',
+                reaction='pC -> C',
+                rate_law='k3b * C',
+                mode='additive',
+                to_replace=None,  # not needed for additive mode
+            )
+
+        def extension_hypothesis__replace_reaction(self):
+            return HypothesisExtension(
+                name='ReplaceReaction',
+                reaction='pB -> B',
+                rate_law='VmaxB * pB / (kmB + pB)',
+                mode='replace',
+                to_replace='R2f',  # name of reaction we want to replace
+            )
+
+        def extension_hypothesis__feedback1(self):
+            return HypothesisExtension(
+                name='Feedback1',
+                reaction='pA -> A',
+                rate_law='VmaxA * pA / (kmA + pA)',
+                mode='additive',
+                to_replace=None,  # name of reaction we want to replace
+            )
+
+        def extension_hypothesis__feedback2(self):
+            return HypothesisExtension(
+                name='Feedback2',
+                reaction='pA -> A',
+                rate_law='k4 * pA',  # mass action variant
+                mode='additive',
+                to_replace=None,  # name of reaction we want to replace
+            )
+
+    Now that we have built a Combinations subclass we
+    can use it as follows:
+
+    .. code-block:
+        print(self.c)
+        print(len(self.c))
+        print(self.c.to_list())
+
+    Produces:
+
+        MyCombModel(topology=0)
+        24
+        [MyCombModel(topology=0), MyCombModel(topology=1), MyCombModel(topology=2), MyCombModel(topology=3), MyCombModel(topology=4), MyCombModel(topology=5), MyCombModel(topology=6), MyCombModel(topology=7), MyCombModel(topology=8), MyCombModel(topology=9), MyCombModel(topology=10), MyCombModel(topology=11), MyCombModel(topology=12), MyCombModel(topology=13), MyCombModel(topology=14), MyCombModel(topology=15), MyCombModel(topology=16), MyCombModel(topology=17), MyCombModel(topology=18), MyCombModel(topology=19), MyCombModel(topology=20), MyCombModel(topology=21), MyCombModel(topology=22), MyCombModel(topology=23)]
+
+
+        for i in self.c:
+            print(i)
+
+        for i, model in self.c.items():
+            print(i, model)
+
+        first_model = self.c[0]
+
+        print(first_model)
+        print(first_model.to_antimony())
+
+        rr = first_model.to_tellurium()
+        print(rr.simulate(0, 10, 11))
+
+
+
+
+
+
+
+
     """
 
     def __init__(self, directory, mutually_exclusive_reactions=[]):
@@ -194,11 +370,11 @@ class Combinations:
         df.index.name = 'ModelID'
         return df
 
-    def to_tellurium(self, best_parameters):
-        return te.loada(self._build_antimony(best_parameters=best_parameters))
+    def to_tellurium(self):
+        return te.loada(self.to_antimony())
 
     def to_antimony(self):
-        raise NotImplementedError('feature still to be implemented')
+        return self._build_antimony()
 
     def get_all_parameters_as_list(self):
         all_parameters = self.core__parameters().split('\n')
@@ -256,7 +432,6 @@ class Combinations:
                 # when we have mutually exclusive reactions, filter them out
                 for mi1, mi2 in mut_excl_list:
                     if mi1 in model_comb and mi2 in model_comb:
-                        print('adlfjabdifbasdjlcabsd', mi1, mi2)
                         continue
                     perm_list2.append(model_comb)
         return perm_list2
@@ -323,12 +498,16 @@ class Combinations:
 
         else:
             raise ValueError
-        s += self.core__events()
-        s += self.core__units()
+        if self.core__events():
+           s += self.core__events()
+        if self.core__units():
+            s += self.core__units()
         s += "\nend"
 
         # we now need to remove any global parameters that are not used in the current model topology
-        exclude_list = ['Cell', 'ExperimentIndicator']  # we want to keep these
+        #todo find a better solution for this bit
+        exclude_list = ['Cell']  # we want to keep these
+
         for useless_parameter in self.get_all_parameters_as_list():
             if useless_parameter not in self._build_reactions():
                 if useless_parameter not in exclude_list:

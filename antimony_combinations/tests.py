@@ -205,7 +205,7 @@ class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
                 reaction='Smad2 => pSmad2',
                 rate_law='NonCompetitiveInhibitionWithKcatAndExtraActivator(_kAktPhosSmad2_km, _kAktPhosSmad2_ki, _kAktPhosSmad2_kcat, TGFb, pAkt, 1, pErk, Smad2)',
                 mode='replace',
-                to_repalce='TGFbR1'
+                to_replace='TGFbR1'
             )
 
         def extension_hypothesis__ErkActivateSmad2AktInhibit(self):
@@ -214,7 +214,7 @@ class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
                 reaction='Smad2 => pSmad2',
                 rate_law='NonCompetitiveInhibitionWithKcatAndExtraActivator(_kErkPhosSmad2_km, _kErkPhosSmad2_ki, _kErkPhosSmad2_kcat, TGFb, pErk, 1, pAkt, Smad2);  //(km, ki, kcat, E, n, I, S)',
                 mode='replace',
-                to_repalce='TGFbR1'
+                to_replace='TGFbR1'
             )
 
         def extension_hypothesis__pAktActivateErk(self):
@@ -223,7 +223,7 @@ class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
                 reaction='Erk => pErk',
                 rate_law='_kAktActivateErk*Erk*pAkt',
                 mode='additive',
-                to_repalce=None
+                to_replace=None
             )
 
         def extension_hypothesis__S6KActivateErk(self):
@@ -232,7 +232,7 @@ class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
                 reaction='Erk => pErk',
                 rate_law='_kS6KActivateErk*Erk*pS6K',
                 mode='additive',
-                to_repalce=None
+                to_replace=None
             )
 
         def extension_hypothesis__ErkActivatesS6K(self):
@@ -241,7 +241,7 @@ class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
                 reaction='S6K => pS6K',
                 rate_law='_ErkActivateS6K*pErk*S6K',
                 mode='additive',
-                to_repalce=None
+                to_replace=None
             )
 
     def setUp(self) -> None:
@@ -501,7 +501,7 @@ class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
                 reaction='Smad2 => pSmad2',
                 rate_law='NonCompetitiveInhibitionWithKcatAndExtraActivator(_kAktPhosSmad2_km, _kAktPhosSmad2_ki, _kAktPhosSmad2_kcat, TGFb, pAkt, 1, pErk, Smad2)',
                 mode='replace',
-                to_repalce='TGFbR1'
+                to_replace='TGFbR1'
             )
 
         def extension_hypothesis__ErkActivateSmad2AktInhibit(self):
@@ -510,7 +510,7 @@ class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
                 reaction='Smad2 => pSmad2',
                 rate_law='NonCompetitiveInhibitionWithKcatAndExtraActivator(_kErkPhosSmad2_km, _kErkPhosSmad2_ki, _kErkPhosSmad2_kcat, TGFb, pErk, 1, pAkt, Smad2);  //(km, ki, kcat, E, n, I, S)',
                 mode='replace',
-                to_repalce='TGFbR1'
+                to_replace='TGFbR1'
             )
 
         def extension_hypothesis__pAktActivateErk(self):
@@ -519,7 +519,7 @@ class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
                 reaction='Erk => pErk',
                 rate_law='_kAktActivateErk*Erk*pAkt',
                 mode='additive',
-                to_repalce=None
+                to_replace=None
             )
 
         def extension_hypothesis__S6KActivateErk(self):
@@ -528,7 +528,7 @@ class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
                 reaction='Erk => pErk',
                 rate_law='_kS6KActivateErk*Erk*pS6K',
                 mode='additive',
-                to_repalce=None
+                to_replace=None
             )
 
         def extension_hypothesis__ErkActivatesS6K(self):
@@ -537,7 +537,7 @@ class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
                 reaction='S6K => pS6K',
                 rate_law='_ErkActivateS6K*pErk*S6K',
                 mode='additive',
-                to_repalce=None
+                to_replace=None
             )
 
     def setUp(self) -> None:
@@ -560,6 +560,130 @@ class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
     def test_getitem(self):
         mod4 = self.c[4]
         self.assertEqual(mod4.topology, 4)
+
+
+class AnotherExampleTests(unittest.TestCase):
+    class MyCombModel(Combinations):
+
+        # no __init__ is necessary as we use the __init__ from parent class
+
+        def core__functions(self):
+            return ''' '''
+
+        def core__variables(self):
+            return '''
+    compartment Cell;
+    var A in Cell;
+    var pA in Cell;
+    var B in Cell;
+    var pB in Cell;
+    var C in Cell;
+    var pC in Cell;
+    
+    const S in Cell
+    '''
+
+        def core__reactions(self):
+            return '''
+    R1f: A -> pA; k1f*A*S;
+    R2f: B -> pB; k2f*B*A;
+    R3f: C -> pC; k3f*C*B;
+    '''
+
+        def core__parameters(self):
+            return '''
+    k1f    = 0.1;
+    k2f    = 0.1;
+    k3f    = 0.1;
+    
+    k2b    = 0.1;
+    k3b    = 0.1;
+    VmaxB  = 0.1;
+    kmB    = 0.1;
+    VmaxA  = 0.1;
+    kmA    = 0.1;
+    k4     = 0.1;
+    '''
+
+        def core__units(self):
+            return None  # Not needed for now
+
+        def core__events(self):
+            return None  # No events needed
+
+        def extension_hypothesis__additive1(self):
+            return HypothesisExtension(
+                name='AdditiveReaction1',
+                reaction='pB -> B',
+                rate_law='k2b * pB',
+                mode='additive',
+                to_replace=None,  # not needed for additive mode
+            )
+
+        def extension_hypothesis__additive2(self):
+            return HypothesisExtension(
+                name='AdditiveReaction2',
+                reaction='pC -> C',
+                rate_law='k3b * C',
+                mode='additive',
+                to_replace=None,  # not needed for additive mode
+            )
+
+        def extension_hypothesis__replace_reaction(self):
+            return HypothesisExtension(
+                name='ReplaceReaction',
+                reaction='pB -> B',
+                rate_law='VmaxB * pB / (kmB + pB)',
+                mode='replace',
+                to_replace='R2f',  # name of reaction we want to replace
+            )
+
+        def extension_hypothesis__feedback1(self):
+            return HypothesisExtension(
+                name='Feedback1',
+                reaction='pA -> A',
+                rate_law='VmaxA * pA / (kmA + pA)',
+                mode='additive',
+                to_replace=None,  # name of reaction we want to replace
+            )
+
+        def extension_hypothesis__feedback2(self):
+            return HypothesisExtension(
+                name='Feedback2',
+                reaction='pA -> A',
+                rate_law='k4 * pA',  # mass action variant
+                mode='additive',
+                to_replace=None,  # name of reaction we want to replace
+            )
+
+    def setUp(self) -> None:
+        directory = os.path.dirname(__file__)
+        self.c = self.MyCombModel(directory, mutually_exclusive_reactions=[
+            ('Feedback1', 'Feedback2')
+        ])
+
+    def test(self):
+        print(self.c)
+        print(len(self.c))
+        print(self.c.to_list())
+
+        for i in self.c:
+            print(i)
+
+        for i, model in self.c.items():
+            print(i, model)
+
+        first_model = self.c[0]
+
+        print(first_model)
+        print(first_model.to_antimony())
+
+        rr = first_model.to_tellurium()
+        print(rr.simulate(0, 10, 11))
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
