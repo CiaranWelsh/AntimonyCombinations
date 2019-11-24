@@ -1,6 +1,6 @@
 import unittest
 
-from antimony_combinations.AntimonyCombinations import Combinations, HypothesisExtension
+from antimony_combinations.antimony_combinations import Combinations, HypothesisExtension
 import os
 
 
@@ -246,7 +246,7 @@ class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
 
     def setUp(self) -> None:
         self.dire = os.path.dirname(__file__)
-        self.c = self.TestCombinationModel(self.dire)
+        self.c = self.TestCombinationModel(directory=self.dire)
 
     def test_len(self):
         expected = 31
@@ -298,6 +298,22 @@ class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
         expected = ['TGFbR1', 'TGFbR2', 'MAPKR1', 'MAPKR2', 'MAPKR3', 'PI3KR1', 'PI3KR2', 'PI3KR3', 'PI3KR4', 'PI3KR5']
         actual = self.c.get_reaction_names()
         self.assertEqual(expected, actual)
+
+    def test_slice(self):
+        expected = [0, 2, 4, 6, 8]
+        actual = [i.topology for i in self.c[:10:2]]
+        self.assertEqual(expected, actual)
+
+    def test_subset_by_list(self):
+        actual = [4, 9]
+        expected = [i.topology for i in self.c[actual]]
+        self.assertEqual(expected, actual)
+
+    def test_subset_by_tuple(self):
+        actual = (7, 5)
+        expected = [i.topology for i in self.c[actual]]
+        self.assertEqual(expected, list(actual))
+
 
 
 class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
@@ -543,10 +559,9 @@ class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
     def setUp(self) -> None:
         self.dire = os.path.dirname(__file__)
         self.c = self.TestCombinationModel(
-            self.dire,
             mutually_exclusive_reactions=[
                 ('CrossTalkR1', 'CrossTalkR2'),
-            ]
+            ], directory=self.dire
         )
 
     def test_get_combinations(self):
@@ -572,38 +587,47 @@ class AnotherExampleTests(unittest.TestCase):
 
         def core__variables(self):
             return '''
-    compartment Cell;
-    var A in Cell;
-    var pA in Cell;
-    var B in Cell;
-    var pB in Cell;
-    var C in Cell;
-    var pC in Cell;
-    
-    const S in Cell
-    '''
+        compartment Cell;
+        var A in Cell;
+        var pA in Cell;
+        var B in Cell;
+        var pB in Cell;
+        var C in Cell;
+        var pC in Cell;
+        
+        const S in Cell
+        '''
 
         def core__reactions(self):
             return '''
-    R1f: A -> pA; k1f*A*S;
-    R2f: B -> pB; k2f*B*A;
-    R3f: C -> pC; k3f*C*B;
-    '''
+        R1f: A -> pA; k1f*A*S;
+        R2f: B -> pB; k2f*B*A;
+        R3f: C -> pC; k3f*C*B;
+        '''
 
         def core__parameters(self):
             return '''
-    k1f    = 0.1;
-    k2f    = 0.1;
-    k3f    = 0.1;
-    
-    k2b    = 0.1;
-    k3b    = 0.1;
-    VmaxB  = 0.1;
-    kmB    = 0.1;
-    VmaxA  = 0.1;
-    kmA    = 0.1;
-    k4     = 0.1;
-    '''
+        k1f    = 0.1;
+        k2f    = 0.1;
+        k3f    = 0.1;
+        
+        k2b    = 0.1;
+        k3b    = 0.1;
+        VmaxB  = 0.1;
+        kmB    = 0.1;
+        VmaxA  = 0.1;
+        kmA    = 0.1;
+        k4     = 0.1;
+        
+        S = 1;
+        A = 10;
+        pA = 0;
+        B = 10;
+        pB = 0;
+        C = 10;
+        pC = 0;
+        Cell = 1;
+        '''
 
         def core__units(self):
             return None  # Not needed for now
@@ -658,19 +682,19 @@ class AnotherExampleTests(unittest.TestCase):
 
     def setUp(self) -> None:
         directory = os.path.dirname(__file__)
-        self.c = self.MyCombModel(directory, mutually_exclusive_reactions=[
+        self.c = self.MyCombModel(mutually_exclusive_reactions=[
             ('Feedback1', 'Feedback2')
-        ])
+        ], directory=directory)
 
     def test(self):
         print(self.c)
         print(len(self.c))
-        print(self.c.to_list())
+        print(self.c.to_list()[:4])
 
-        for i in self.c:
+        for i in self.c[:3]:
             print(i)
 
-        for i, model in self.c.items():
+        for i, model in self.c.items()[:3]:
             print(i, model)
 
         first_model = self.c[0]
@@ -679,7 +703,12 @@ class AnotherExampleTests(unittest.TestCase):
         print(first_model.to_antimony())
 
         rr = first_model.to_tellurium()
+        print(rr)
         print(rr.simulate(0, 10, 11))
+
+        print(self.c.list_topologies())
+
+        print(self.c.to_copasi())
 
 
 

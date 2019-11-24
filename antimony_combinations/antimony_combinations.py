@@ -13,6 +13,7 @@ import seaborn
 import yaml
 import logging
 from copy import deepcopy
+from pycotools3 import tasks, model
 
 mpl_logger = logging.getLogger('matplotlib')
 mpl_logger.setLevel(logging.WARNING)
@@ -26,6 +27,7 @@ class HypothesisExtension:
     Data class for storing information about a hypothesis extension. For usage
     see :py:class:`Combinations`.
     """
+
     def __init__(self, name, reaction,
                  rate_law, mode='additive',
                  to_replace=None):
@@ -89,141 +91,299 @@ class Combinations:
     `replace` mode on the other hand should be used when your
     reaction should be used *instead* of another reaction.
 
+
     Examples
-    --------
+    ========
 
-    class MyCombModel(Combinations):
+    .. code-block::
 
-        # no __init__ is necessary as we use the __init__ from parent class
+        class MyCombModel(Combinations):
 
-        def core__functions(self):
-            return ''' '''
+            # no __init__ is necessary as we use the __init__ from parent class
 
-        def core__variables(self):
-            return '''
-compartment Cell;
-var A in Cell;
-var pA in Cell;
-var B in Cell;
-var pB in Cell;
-var C in Cell;
-var pC in Cell;
+            def core__functions(self):
+                return ''' '''
 
-const S in Cell
-'''
+            def core__variables(self):
+                return '''
+                compartment Cell;
+                var A in Cell;
+                var pA in Cell;
+                var B in Cell;
+                var pB in Cell;
+                var C in Cell;
+                var pC in Cell;
 
-        def core__reactions(self):
-            return '''
-R1f: A -> pA; k1f*A*S;
-R2f: B -> pB; k2f*B*A;
-R3f: C -> pC; k3f*C*B;
-'''
+                const S in Cell
+                '''
 
-        def core__parameters(self):
-            return '''
-k1f    = 0.1;
-k2f    = 0.1;
-k3f    = 0.1;
+            def core__reactions(self):
+                return '''
+                R1f: A -> pA; k1f*A*S;
+                R2f: B -> pB; k2f*B*A;
+                R3f: C -> pC; k3f*C*B;
+                '''
 
-k2b    = 0.1;
-k3b    = 0.1;
-VmaxB  = 0.1;
-kmB    = 0.1;
-VmaxA  = 0.1;
-kmA    = 0.1;
-k4     = 0.1;
-'''
+            def core__parameters(self):
+                return '''
+                k1f    = 0.1;
+                k2f    = 0.1;
+                k3f    = 0.1;
 
-        def core__units(self):
-            return None  # Not needed for now
+                k2b    = 0.1;
+                k3b    = 0.1;
+                VmaxB  = 0.1;
+                kmB    = 0.1;
+                VmaxA  = 0.1;
+                kmA    = 0.1;
+                k4     = 0.1;
 
-        def core__events(self):
-            return None  # No events needed
+                S = 1;
+                A = 10;
+                pA = 0;
+                B = 10;
+                pB = 0;
+                C = 10;
+                pC = 0;
+                Cell = 1;
+                '''
 
-        def extension_hypothesis__additive1(self):
-            return HypothesisExtension(
-                name='AdditiveReaction1',
-                reaction='pB -> B',
-                rate_law='k2b * pB',
-                mode='additive',
-                to_replace=None,  # not needed for additive mode
-            )
+            def core__units(self):
+                return None  # Not needed for now
 
-        def extension_hypothesis__additive2(self):
-            return HypothesisExtension(
-                name='AdditiveReaction2',
-                reaction='pC -> C',
-                rate_law='k3b * C',
-                mode='additive',
-                to_replace=None,  # not needed for additive mode
-            )
+            def core__events(self):
+                return None  # No events needed
 
-        def extension_hypothesis__replace_reaction(self):
-            return HypothesisExtension(
-                name='ReplaceReaction',
-                reaction='pB -> B',
-                rate_law='VmaxB * pB / (kmB + pB)',
-                mode='replace',
-                to_replace='R2f',  # name of reaction we want to replace
-            )
+            def extension_hypothesis__additive1(self):
+                return HypothesisExtension(
+                    name='AdditiveReaction1',
+                    reaction='pB -> B',
+                    rate_law='k2b * pB',
+                    mode='additive',
+                    to_replace=None,  # not needed for additive mode
+                )
 
-        def extension_hypothesis__feedback1(self):
-            return HypothesisExtension(
-                name='Feedback1',
-                reaction='pA -> A',
-                rate_law='VmaxA * pA / (kmA + pA)',
-                mode='additive',
-                to_replace=None,  # name of reaction we want to replace
-            )
+            def extension_hypothesis__additive2(self):
+                return HypothesisExtension(
+                    name='AdditiveReaction2',
+                    reaction='pC -> C',
+                    rate_law='k3b * C',
+                    mode='additive',
+                    to_replace=None,  # not needed for additive mode
+                )
 
-        def extension_hypothesis__feedback2(self):
-            return HypothesisExtension(
-                name='Feedback2',
-                reaction='pA -> A',
-                rate_law='k4 * pA',  # mass action variant
-                mode='additive',
-                to_replace=None,  # name of reaction we want to replace
-            )
+            def extension_hypothesis__replace_reaction(self):
+                return HypothesisExtension(
+                    name='ReplaceReaction',
+                    reaction='pB -> B',
+                    rate_law='VmaxB * pB / (kmB + pB)',
+                    mode='replace',
+                    to_replace='R2f',  # name of reaction we want to replace
+                )
+
+            def extension_hypothesis__feedback1(self):
+                return HypothesisExtension(
+                    name='Feedback1',
+                    reaction='pA -> A',
+                    rate_law='VmaxA * pA / (kmA + pA)',
+                    mode='additive',
+                    to_replace=None,  # name of reaction we want to replace
+                )
+
+            def extension_hypothesis__feedback2(self):
+                return HypothesisExtension(
+                    name='Feedback2',
+                    reaction='pA -> A',
+                    rate_law='k4 * pA',  # mass action variant
+                    mode='additive',
+                    to_replace=None,  # name of reaction we want to replace
+                )
 
     Now that we have built a Combinations subclass we
     can use it as follows:
 
-    .. code-block:
-        print(self.c)
-        print(len(self.c))
-        print(self.c.to_list())
+    >>> project_root = os.path.dirname(__file__)
+    >>> c = MyCombModel(mutually_exclusive_reactions=[
+    >>>         ('Feedback1', 'Feedback2')
+    >>>     ], directory=project_root       # optionally specify project root
+    >>> )
 
-    Produces:
+    MyCombModel behaves like an iterator, though it doesn't
+    store all model topologies on the outset but builds models
+    of the fly as the `topology` attribute is incremented. Topology
+    always starts on model 0, the core model that
+    doesn't have additional hypothesis extensions.
 
-        MyCombModel(topology=0)
-        24
-        [MyCombModel(topology=0), MyCombModel(topology=1), MyCombModel(topology=2), MyCombModel(topology=3), MyCombModel(topology=4), MyCombModel(topology=5), MyCombModel(topology=6), MyCombModel(topology=7), MyCombModel(topology=8), MyCombModel(topology=9), MyCombModel(topology=10), MyCombModel(topology=11), MyCombModel(topology=12), MyCombModel(topology=13), MyCombModel(topology=14), MyCombModel(topology=15), MyCombModel(topology=16), MyCombModel(topology=17), MyCombModel(topology=18), MyCombModel(topology=19), MyCombModel(topology=20), MyCombModel(topology=21), MyCombModel(topology=22), MyCombModel(topology=23)]
+    >>> print(c)
+    MyCombModel(topology=0)
+
+    The complete set of model topologies is enumerated by the
+    `topology` attribute. The `__len__` method is set to the
+    size of this set, accounting for mutually exclusive
+    topologies, which is a mechanism for reducing the topology space.
+
+    >>> print(len(c))
+    24
+
+    You can pick out any of these topologies using the
+    selection operator
+
+    >>> print(c[4])
+    MyCombModel(topology=4)
+
+    To see which topologies correspond to which hypothesis
+    extensions we can use :py:meth:`antimony_combinations.list_topologies`,
+    which returns a pandas.DataFrame.
+
+    >>> c.list_topolgies()
+                                                          Topology
+    ModelID
+    0                                                     Null
+    1                                                additive1
+    2                                                additive2
+    3                                                feedback1
+    4                                                feedback2
+    5                                         replace_reaction
+    6                                     additive1__additive2
+    7                                     additive1__feedback1
+    8                                     additive1__feedback2
+    9                              additive1__replace_reaction
+    10                                    additive2__feedback1
+    11                                    additive2__feedback2
+    12                             additive2__replace_reaction
+    13                             feedback1__replace_reaction
+    14                             feedback2__replace_reaction
+    15                         additive1__additive2__feedback1
+    16                         additive1__additive2__feedback2
+    17                  additive1__additive2__replace_reaction
+    18                  additive1__feedback1__replace_reaction
+    19                  additive1__feedback2__replace_reaction
+    20                  additive2__feedback1__replace_reaction
+    21                  additive2__feedback2__replace_reaction
+    22       additive1__additive2__feedback1__replace_reaction
+    23       additive1__additive2__feedback2__replace_reaction
 
 
-        for i in self.c:
-            print(i)
+    You can extract all topologies into a list using the
+    :py:meth:`antimony_combinations.Combinations.to_list`
+    method.
 
-        for i, model in self.c.items():
-            print(i, model)
+    >>> print(c.to_list()[:4])
+    [MyCombModel(topology=0),
+     MyCombModel(topology=1),
+     MyCombModel(topology=2),
+     MyCombModel(topology=3)]
 
-        first_model = self.c[0]
+    You can iterate over the set of topologies
 
-        print(first_model)
-        print(first_model.to_antimony())
+    >>> for i in c[:3]:
+    >>> ... print(i)
+    MyCombModel(topology=0)
+    MyCombModel(topology=1)
+    MyCombModel(topology=2)
 
-        rr = first_model.to_tellurium()
-        print(rr.simulate(0, 10, 11))
+    Or use the items method, which is similar to dict.items().
 
+    >>> for i, model in c.items()[:3]:
+    >>> ... print(i, model)
+    0 MyCombModel(topology=0)
+    1 MyCombModel(topology=1)
+    2 MyCombModel(topology=2)
 
+    Selecting a single model, we can create an antimony string
+    >>> first_model = c[0]
+    >>> print(first_model.to_antimony())
+    model MyCombModelTopology0
+        compartment Cell;
+        var A in Cell;
+        var pA in Cell;
+        var B in Cell;
+        var pB in Cell;
+        var C in Cell;
+        var pC in Cell;
+        const S in Cell
+        R1f: A -> pA; k1f*A*S;
+        R2f: B -> pB; k2f*B*A;
+        R3f: C -> pC; k3f*C*B;
+        k1f = 0.1;
+        k2f = 0.1;
+        k3f = 0.1;
+        S = 1;
+        A = 10;
+        pA = 0;
+        B = 10;
+        pB = 0;
+        C = 10;
+        pC = 0;
+        Cell = 1;
+    end
 
+    or a tellurium model
 
+    >>> rr = first_model.to_tellurium()
+    >>> print(rr)
+    <roadrunner.RoadRunner() {
+    'this' : 0x555a52c8cb90
+    'modelLoaded' : true
+    'modelName' :
+    'libSBMLVersion' : LibSBML Version: 5.17.2
+    'jacobianStepSize' : 1e-05
+    'conservedMoietyAnalysis' : false
+    'simulateOptions' :
+    < roadrunner.SimulateOptions()
+    {
+    'this' : 0x555a5309cd00,
+    'reset' : 0,
+    'structuredResult' : 0,
+    'copyResult' : 1,
+    'steps' : 50,
+    'start' : 0,
+    'duration' : 5
+    }>,
+    'integrator' :
+    < roadrunner.Integrator() >
+      name: cvode
+      settings:
+          relative_tolerance: 0.000001
+          absolute_tolerance: 0.000000000001
+                       stiff: true
+           maximum_bdf_order: 5
+         maximum_adams_order: 12
+           maximum_num_steps: 20000
+           maximum_time_step: 0
+           minimum_time_step: 0
+           initial_time_step: 0
+              multiple_steps: false
+          variable_step_size: false
 
+    }>
 
+    >>> print(rr.simulate(0, 10, 11))
+        time,     [A],     [pA],       [B],    [pB],     [C],    [pC]
+     [[    0,      10,        0,        10,       0,      10,       0],
+      [    1, 9.04837, 0.951626,   3.86113, 6.13887, 5.27257, 4.72743],
+      [    2, 8.18731,  1.81269,   1.63214, 8.36786, 4.07751, 5.92249],
+      [    3, 7.40818,  2.59182,  0.748842, 9.25116, 3.64313, 6.35687],
+      [    4,  6.7032,   3.2968,  0.370018, 9.62998, 3.45361, 6.54639],
+      [    5, 6.06531,  3.93469,  0.195519, 9.80448,  3.3609,  6.6391],
+      [    6, 5.48812,  4.51188,  0.109779, 9.89022, 3.31158, 6.68842],
+      [    7, 4.96585,  5.03415, 0.0651185, 9.93488,  3.2835,  6.7165],
+      [    8, 4.49329,  5.50671, 0.0405951,  9.9594, 3.26657, 6.73343],
+      [    9,  4.0657,   5.9343, 0.0264712, 9.97353, 3.25584, 6.74416],
+      [   10, 3.67879,  6.32121, 0.0179781, 9.98202, 3.24872, 6.75128]]
 
+    Or an interface to copasi, via `pycotools3 <https://pycotools3.readthedocs.io/en/latest/>`_
 
+    >>> c.to_copasi()
+    Model(name=NoName, time_unit=s, volume_unit=l, quantity_unit=mol)
+
+    Which could be used to configure parameter estimations. Currently,
+    support for parameter estimation configuration has in COPASI not been included
+    but this is planned for the near future.
     """
 
-    def __init__(self, directory, mutually_exclusive_reactions=[]):
+    def __init__(self, mutually_exclusive_reactions=[],
+                 directory=None):
         self.mutually_exclusive_reactions = mutually_exclusive_reactions
         if self.mutually_exclusive_reactions is not None:
             if not isinstance(self.mutually_exclusive_reactions, list):
@@ -232,11 +392,19 @@ k4     = 0.1;
                 if not isinstance(i, tuple):
                     raise TypeError('expecting tuple but got {}'.format(type(self.mutually_exclusive_reactions)))
 
-
         self._topology = 0
-        self.problem_directory = directory
-        if not os.path.isdir(self.problem_directory):
-            os.makedirs(self.problem_directory)
+        self.directory = directory
+
+        # for when run from script
+        if self.directory is None:
+            self.directory = os.path.dirname(__file__)
+
+        # for when run in python interpreter
+        if self.directory == '':
+            self.directory = os.getcwd()
+
+        if not os.path.isdir(self.directory):
+            os.makedirs(self.directory)
 
         self.cps_file = os.path.join(self.topology_dir, 'Topology{}'.format(self.topology))
 
@@ -268,15 +436,26 @@ k4     = 0.1;
             self.topology += 1
             return top
         else:
-            self.topology = 0           # turn back to 0 for looping again
+            self.topology = 0  # turn back to 0 for looping again
             raise StopIteration
 
     def __getitem__(self, item):
-        if not isinstance(item, int):
-            raise TypeError('"item" should be of type int. Got "{}" instead'.format(type(item)))
-
-        self.topology = item
-        return self
+        if not isinstance(item, (int, slice,
+                                 tuple, list)):
+            raise TypeError('"item" should be of type int or slice. Got "{}" instead'.format(type(item)))
+        if isinstance(item, int):
+            self.topology = item
+            return self
+        elif isinstance(item, slice):
+            required = range(item.start if item.start is not None else 0,
+                             item.stop if item.stop is not None else len(self),
+                             item.step if item.step is not None else 1)
+            return [deepcopy(self[i]) for i in required]
+        elif isinstance(item, (tuple, list)):
+            for i in item:
+                if not isinstance(i, int):
+                    raise ValueError('expected an integer for index. Got "{}"'.format(type(i)))
+            return [deepcopy(self[i]) for i in item]
 
     def to_list(self):
         return [deepcopy(self[i]) for i in range(len(self))]
@@ -318,43 +497,25 @@ k4     = 0.1;
         self._topology = new
 
     @property
-    def model_selection_dir(self):
-        d = os.path.join(self.problem_directory, 'ModelSelection')
-        if not os.path.isdir(d):
-            os.makedirs(d)
-        return d
-
-    @property
     def topology_dir(self):
-        d = os.path.join(self.model_selection_dir, 'Topology{}'.format(self.topology))
-        if not os.path.isdir(d):
-            os.makedirs(d)
-        return d
-
-    @property
-    def fit_dir(self):
-        d = os.path.join(self.topology_dir, 'Fit{}'.format(self.fit))
-        if not os.path.isdir(d):
-            os.makedirs(d)
-        return d
-
-    @property
-    def graphs_dir(self):
-        d = os.path.join(self.fit_dir, 'Graphs')
+        d = os.path.join(self.directory, 'Topology{}'.format(self.topology))
         if not os.path.isdir(d):
             os.makedirs(d)
         return d
 
     @property
     def time_course_graphs(self):
-        d = os.path.join(self.graphs_dir, 'TimeCourseSimulations')
+        d = os.path.join(self.topology_dir, 'TimeCourseSimulations')
         if not os.path.isdir(d):
             os.makedirs(d)
         return d
 
     @property
     def copasi_file(self):
-        return os.path.join(self.fit_dir, 'topology{}.cps'.format(self.topology))
+        return os.path.join(self.topology_dir, 'topology{}.cps'.format(self.topology))
+
+    def to_copasi(self):
+        return model.loada(self.to_antimony(), self.copasi_file)
 
     def list_topologies(self):
         topologies = OrderedDict()
@@ -401,8 +562,8 @@ k4     = 0.1;
         for mi1, mi2 in self.mutually_exclusive_reactions:
             l2 = []
             for k, v in self.model_variant_reactions.items():
-                mi1_match = re.findall('^'+mi1, str(v))
-                mi2_match = re.findall('^'+mi2, str(v))
+                mi1_match = re.findall('^' + mi1, str(v))
+                mi2_match = re.findall('^' + mi2, str(v))
 
                 if mi1_match:
                     l2.append(k)
@@ -458,16 +619,16 @@ k4     = 0.1;
             reaction_name = re.findall('^\w+', reaction)
 
             if reaction_name == []:
-                s += '\t\t' + reaction + '\n'
+                s += '\t' + reaction + '\n'
                 # continue
 
             elif reaction_name[0] in replacements:
                 # get index of the reaction we want to replace
                 idx = replacements.index(reaction_name[0])
                 replacement_reaction = hypotheses_needed[idx]
-                s += '\t\t' + str(replacement_reaction) + '\n'
+                s += '\t' + str(replacement_reaction) + '\n'
             elif reaction_name[0] not in replacements:
-                s += '\t\t' + reaction + '\n'
+                s += '\t' + reaction + '\n'
             else:
                 raise ValueError('This should not happen')
 
@@ -499,13 +660,13 @@ k4     = 0.1;
         else:
             raise ValueError
         if self.core__events():
-           s += self.core__events()
+            s += self.core__events()
         if self.core__units():
             s += self.core__units()
         s += "\nend"
 
         # we now need to remove any global parameters that are not used in the current model topology
-        #todo find a better solution for this bit
+        # todo find a better solution for this bit
         exclude_list = ['Cell']  # we want to keep these
 
         for useless_parameter in self.get_all_parameters_as_list():
@@ -572,6 +733,3 @@ k4     = 0.1;
 
     def core__units(self):
         return None
-
-
-
