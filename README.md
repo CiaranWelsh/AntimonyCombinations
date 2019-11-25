@@ -16,6 +16,14 @@ number of additional hypotheses, called hypothesis extensions.
 comprehensive set of model topologies, given the core hypothesis
 and hypothesis extensions. 
 
+## Installation
+
+    `$ pip install AntimonyCombinations`
+    
+## Import
+
+    `>>> from antimony_combinations import Combinations, HypothesisExtension`
+
 
 ## [See documentation here](https://antimonycombinations.readthedocs.io/en/latest/)
 
