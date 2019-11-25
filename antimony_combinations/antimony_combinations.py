@@ -240,10 +240,10 @@ class Combinations:
     MyCombModel(topology=4)
 
     To see which topologies correspond to which hypothesis
-    extensions we can use :py:meth:`antimony_combinations.list_topologies`,
+    extensions we can use :py:meth:`antimony_combinations.get_topologies`,
     which returns a pandas.DataFrame.
 
-    >>> c.list_topolgies()
+    >>> c.get_topolgies()
                                                           Topology
     ModelID
     0                                                     Null
@@ -329,7 +329,7 @@ class Combinations:
 
     or a tellurium model
 
-    >>> rr = first_model.to_tellurium()
+    >>> rr = first_model.to_roadrunner()
     >>> print(rr)
     <roadrunner.RoadRunner() {
     'this' : 0x555a52c8cb90
@@ -481,9 +481,21 @@ class Combinations:
             return [deepcopy(self[i]) for i in item]
 
     def to_list(self) -> list:
+        """
+        Returns:
+            a list of :py:class:`Combination` objects
+            each of which is preset for access to
+            a particular model topology
+        """
         return [deepcopy(self[i]) for i in range(len(self))]
 
-    def items(self) -> list:
+    def items(self) -> typing.List:
+        """
+        Similar to a `dict.items()`. 
+        
+        Returns: a list of tuples of the form [(i, Combinations(topology=i), ...]
+
+        """
         return [(i, deepcopy(self[i])) for i in range(len(self))]
 
     def _model_variant_reactions(self) -> typing.Tuple[typing.Dict[int, str], str]:
@@ -512,15 +524,39 @@ class Combinations:
 
     @property
     def topology(self) -> int:
+        """
+        The ID of the current model, i.e. which topology 
+        you are currently pointing at.
+        
+        Returns:
+            Number            
+        """
         return self._topology
 
     @topology.setter
     def topology(self, new) -> None:
+        """
+        topology setter
+        Args:
+            new: a number between (0, len(Combinations))
+
+        Returns:
+            None
+
+        """
         assert isinstance(new, int)
         self._topology = new
 
     @property
     def topology_dir(self) -> str:
+        """
+        A full path to a directory for files pertaining 
+        to the current topology. Currently only used for 
+        generating copasi files. 
+        
+        Returns:
+
+        """
         d = os.path.join(self.directory, 'Topology{}'.format(self.topology))
         if not os.path.isdir(d):
             os.makedirs(d)
@@ -535,12 +571,32 @@ class Combinations:
 
     @property
     def copasi_file(self) -> str:
+        """
+        A full path to copasi file for current topology
+        Returns:
+
+        """
         return os.path.join(self.topology_dir, 'topology{}.cps'.format(self.topology))
 
     def to_copasi(self) -> model.Model:
+        """
+        Build a copasi file from the sbml generated from tellurium
+        
+        Returns:
+            A :py:class:`tasks.Model`
+        """
         return model.loada(self.to_antimony(), self.copasi_file)
 
-    def list_topologies(self) -> pandas.DataFrame:
+    def get_topologies(self) -> pandas.DataFrame:
+        """
+        Retrieve the topology indexes and the hypotheses
+        contained within them. This is your map between
+        topology numbers and model hypotheses.
+
+        Returns:
+            A pandas.DataFrame
+
+        """
         topologies = OrderedDict()
         comb = self._get_combinations()
 
@@ -554,13 +610,30 @@ class Combinations:
         df.index.name = 'ModelID'
         return df
 
-    def to_tellurium(self) -> rr.ExecutableModel:
+    def to_roadrunner(self) -> rr.ExecutableModel:
+        """
+        Construct a roadrunner model via the tellurium
+        interface using the current antimony string
+
+        Returns:
+
+        """
         return te.loada(self.to_antimony())
 
     def to_antimony(self) -> str:
+        """
+        Construct the antimony string for the current topology
+        Returns:
+
+        """
         return self._build_antimony()
 
-    def get_all_parameters_as_list(self) -> typing.List[str]:
+    def get_parameters_as_list(self) -> typing.List[str]:
+        """
+
+        Returns:
+
+        """
         all_parameters = self.core__parameters().split('\n')
         all_parameters = [i.strip() for i in all_parameters]
         all_parameters = [re.findall('^\w+', i) for i in all_parameters]
@@ -569,9 +642,19 @@ class Combinations:
         return all_parameters
 
     def get_hypotheses(self) -> typing.List[str]:
-        return self.list_topologies().loc[self.topology][0].split('__')
+        """
+        Get a list of hypotheses and their index
+        Returns:
+
+        """
+        return self.get_topologies().loc[self.topology][0].split('__')
 
     def get_reaction_names(self) -> typing.List[str]:
+        """
+
+        Returns:
+            List of reaction names in current model
+        """
         reactions = self.core__reactions().split('\n')
         reactions = [i.strip() for i in reactions]
         reactions = [i for i in reactions if i]
@@ -580,6 +663,11 @@ class Combinations:
         return names
 
     def _get_combinations(self) -> typing.List[typing.Tuple[int]]:
+        """
+        Identify all possible combinations of model hypothesis
+        Returns:
+
+        """
         # convert mutually exclusive reactions to numerical value
         mut_excl_list = []
         for mi1, mi2 in self.mutually_exclusive_reactions:
@@ -692,7 +780,7 @@ class Combinations:
         # todo find a better solution for this bit
         exclude_list = ['Cell']  # we want to keep these
 
-        for useless_parameter in self.get_all_parameters_as_list():
+        for useless_parameter in self.get_parameters_as_list():
             if useless_parameter not in self._build_reactions():
                 if useless_parameter not in exclude_list:
                     s = re.sub(useless_parameter + '.*\n', '', s)

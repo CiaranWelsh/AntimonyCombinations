@@ -717,7 +717,7 @@ class AnotherExampleTests(TearDown):
         print(rr)
         print(rr.simulate(0, 10, 11))
 
-        print(self.c.list_topologies())
+        print(self.c.get_topologies())
 
         print(self.c.to_copasi())
 
