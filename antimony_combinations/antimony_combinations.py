@@ -58,7 +58,7 @@ class Combinations:
     :py:class:`Combinations` is designed to be subclassed. The necessary user input
     is given by overriding core functions and providing hypothesis extensions.
 
-    The following methods must be implemented:
+    The following methods must be implemented (see below for an example):
 
         * :py:meth:`core__reactions`
         * :py:meth:`core__parameters`
@@ -70,8 +70,9 @@ class Combinations:
         * :py:meth:`core__events`
         * :py:meth:`core__units`
 
-    Each of these methods should return a valid antimony string since these strings
-    are used to build up a full antimony model.
+    Each of these methods should return a
+    `valid antimony string <https://tellurium.readthedocs.io/en/latest/antimony.html>`_,
+    since these strings are used to build up a full antimony model.
 
     Extension hypotheses are added by adding methods to your subclass that
     begin with `extension_hypothesis__`. Any method that begins with `extension_hypothesis__`
