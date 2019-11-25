@@ -151,30 +151,31 @@
 <h1>Combinations<a class="headerlink" href="#combinations" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="antimony_combinations.Combinations">
-<em class="property">class </em><code class="sig-prename descclassname">antimony_combinations.</code><code class="sig-name descname">Combinations</code><span class="sig-paren">(</span><em class="sig-param">mutually_exclusive_reactions=[]</em>, <em class="sig-param">directory=None</em><span class="sig-paren">)</span><a class="headerlink" href="#antimony_combinations.Combinations" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">antimony_combinations.</code><code class="sig-name descname">Combinations</code><span class="sig-paren">(</span><em class="sig-param">mutually_exclusive_reactions: List[Tuple[AnyStr]] = []</em>, <em class="sig-param">directory: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#antimony_combinations.Combinations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Builds combinations of SBML model using antimony</p>
 <p>Create every combination of core hypothesis and extension hypotheses and creates
 SBML models using antimony from the tellurium package.</p>
 <p><a class="reference internal" href="#antimony_combinations.Combinations" title="antimony_combinations.Combinations"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combinations</span></code></a> is designed to be subclassed. The necessary user input
 is given by overriding core functions and providing hypothesis extensions.</p>
-<p>The following methods must be implemented:</p>
+<p>The following methods must be implemented (see below for an example):</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__reactions()</span></code></p></li>
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__parameters()</span></code></p></li>
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__variables()</span></code></p></li>
+<li><p><a class="reference internal" href="#antimony_combinations.Combinations.core__reactions" title="antimony_combinations.Combinations.core__reactions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__reactions()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#antimony_combinations.Combinations.core__parameters" title="antimony_combinations.Combinations.core__parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__parameters()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#antimony_combinations.Combinations.core__variables" title="antimony_combinations.Combinations.core__variables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__variables()</span></code></a></p></li>
 </ul>
 </div></blockquote>
 <p>However the following methods are optional:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__functions()</span></code></p></li>
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__events()</span></code></p></li>
+<li><p><a class="reference internal" href="#antimony_combinations.Combinations.core__functions" title="antimony_combinations.Combinations.core__functions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__functions()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#antimony_combinations.Combinations.core__events" title="antimony_combinations.Combinations.core__events"><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__events()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__units()</span></code></p></li>
 </ul>
 </div></blockquote>
-<p>Each of these methods should return a valid antimony string since these strings
-are used to build up a full antimony model.</p>
+<p>Each of these methods should return a
+<a class="reference external" href="https://tellurium.readthedocs.io/en/latest/antimony.html">valid antimony string</a>,
+since these strings are used to build up a full antimony model.</p>
 <p>Extension hypotheses are added by adding methods to your subclass that
 begin with <cite>extension_hypothesis__</cite>. Any method that begins with <cite>extension_hypothesis__</cite>
 will be picked up and used to combinatorially build sbml models.</p>
@@ -399,17 +400,13 @@ reaction should be used <em>instead</em> of another reaction.</p>
 </td></tr></table></div>
 <p>Now that we have built a Combinations subclass we
 can use it as follows:</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">project_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">MyCombModel</span><span class="p">(</span><span class="n">mutually_exclusive_reactions</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s1">&#39;Feedback1&#39;</span><span class="p">,</span> <span class="s1">&#39;Feedback2&#39;</span><span class="p">)</span>
-    <span class="p">],</span> <span class="n">directory</span><span class="o">=</span><span class="n">project_root</span>       <span class="c1"># optionally specify project root</span>
-<span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">project_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">MyCombModel</span><span class="p">(</span><span class="n">mutually_exclusive_reactions</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;Feedback1&#39;</span><span class="p">,</span> <span class="s1">&#39;Feedback2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">],</span> <span class="n">directory</span><span class="o">=</span><span class="n">project_root</span>       <span class="c1"># optionally specify project root</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>MyCombModel behaves like an iterator, though it doesn’t
 store all model topologies on the outset but builds models
 of the fly as the <cite>topology</cite> attribute is incremented. Topology
@@ -436,7 +433,7 @@ selection operator</p>
 <p>To see which topologies correspond to which hypothesis
 extensions we can use <code class="xref py py-meth docutils literal notranslate"><span class="pre">antimony_combinations.get_topologies()</span></code>,
 which returns a pandas.DataFrame.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">list_topolgies</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">get_topolgies</span><span class="p">()</span>
 <span class="go">                                                      Topology</span>
 <span class="go">ModelID</span>
 <span class="go">0                                                     Null</span>
@@ -521,7 +518,7 @@ method.</p>
 </pre></div>
 </div>
 <p>or a tellurium model</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rr</span> <span class="o">=</span> <span class="n">first_model</span><span class="o">.</span><span class="n">to_tellurium</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rr</span> <span class="o">=</span> <span class="n">first_model</span><span class="o">.</span><span class="n">to_roadrunner</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span>
 <span class="go">&lt;roadrunner.RoadRunner() {</span>
 <span class="go">&#39;this&#39; : 0x555a52c8cb90</span>
@@ -556,9 +553,9 @@ method.</p>
 <span class="go">       initial_time_step: 0</span>
 <span class="go">          multiple_steps: false</span>
 <span class="go">      variable_step_size: false</span>
+<span class="go">}&gt;</span>
 </pre></div>
 </div>
-<p>}&gt;</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
 <span class="go">    time,     [A],     [pA],       [B],    [pB],     [C],    [pC]</span>
 <span class="go"> [[    0,      10,        0,        10,       0,      10,       0],</span>
@@ -582,6 +579,228 @@ method.</p>
 <p>Which could be used to configure parameter estimations. Currently,
 support for parameter estimation configuration has in COPASI not been included
 but this is planned for the near future.</p>
+<dl class="method">
+<dt id="antimony_combinations.Combinations.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">mutually_exclusive_reactions: List[Tuple[AnyStr]] = []</em>, <em class="sig-param">directory: Optional[str] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#antimony_combinations.Combinations.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>mutually_exclusive_reactions:</dt><dd><p>An arbitrary length list of tuples of pairs that are names
+of reactions that should never occur together in the same model.
+Defaults to an empty list.</p>
+</dd>
+<dt>directory:</dt><dd><p>Root directory for analysis. The default is the directory
+containing the script being run or the current working directory
+of the interpreter.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.copasi_file">
+<em class="property">property </em><code class="sig-name descname">copasi_file</code><a class="headerlink" href="#antimony_combinations.Combinations.copasi_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>A full path to copasi file for current topology
+Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.core__events">
+<code class="sig-name descname">core__events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#antimony_combinations.Combinations.core__events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Antimony events string. Do not use directly but override in subclass. Optional method.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">core__events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    event1 at t=1.25 == 2</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Returns: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.core__functions">
+<code class="sig-name descname">core__functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#antimony_combinations.Combinations.core__functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional set of functions for use in rate laws. Do not use directly
+but instead override in subclass.</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">core__functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    function MichaelisMenten(vmax, km, s)</span>
+<span class="s1">        vmax * s / (km + s)</span>
+<span class="s1">    end</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Returns: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.core__parameters">
+<code class="sig-name descname">core__parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#antimony_combinations.Combinations.core__parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter list. Do not use directly but over ride in subclass. This method
+is required.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">core__parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    A = 10;</span>
+<span class="s1">    B = 20;</span>
+
+<span class="s1">    k1 = 0.1;</span>
+<span class="s1">    hypothesis_extension_parameter1 = 10;   // will be pruned if not in present model.</span>
+
+<span class="s1">    random_global_parameter = 50;</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Returns: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.core__reactions">
+<code class="sig-name descname">core__reactions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#antimony_combinations.Combinations.core__reactions" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of core reactions; reactions to be shared among all models. Do not
+use directly as this method is designed to be subclassed. This method
+is required.</p>
+<p>Examples:</p>
+<p>Returns: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.core__variables">
+<code class="sig-name descname">core__variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#antimony_combinations.Combinations.core__variables" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>List your variables whilst specifying their compartment. Method not</dt><dd><dl class="simple">
+<dt>to be used directly but overriden in subclass. This is a required</dt><dd><p>method.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">core__variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    compartment Cell = 1;</span>
+<span class="s1">    var A in Cell;</span>
+<span class="s1">    var B in Cell;</span>
+<span class="s1">    const S in Cell;</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Returns: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.get_hypotheses">
+<code class="sig-name descname">get_hypotheses</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#antimony_combinations.Combinations.get_hypotheses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of hypotheses and their index
+Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.get_parameters_as_list">
+<code class="sig-name descname">get_parameters_as_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#antimony_combinations.Combinations.get_parameters_as_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.get_reaction_names">
+<code class="sig-name descname">get_reaction_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#antimony_combinations.Combinations.get_reaction_names" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Returns:</dt><dd><p>List of reaction names in current model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.get_topologies">
+<code class="sig-name descname">get_topologies</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#antimony_combinations.Combinations.get_topologies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the topology indexes and the hypotheses
+contained within them. This is your map between
+topology numbers and model hypotheses.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>A pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.items">
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<a class="headerlink" href="#antimony_combinations.Combinations.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to a <cite>dict.items()</cite>.</p>
+<p>Returns: a list of tuples of the form [(i, Combinations(topology=i), …]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.to_antimony">
+<code class="sig-name descname">to_antimony</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#antimony_combinations.Combinations.to_antimony" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the antimony string for the current topology
+Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.to_copasi">
+<code class="sig-name descname">to_copasi</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pycotools3.model.Model<a class="headerlink" href="#antimony_combinations.Combinations.to_copasi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a copasi file from the sbml generated from tellurium</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">tasks.Model</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.topology">
+<em class="property">property </em><code class="sig-name descname">topology</code><a class="headerlink" href="#antimony_combinations.Combinations.topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ID of the current model, i.e. which topology 
+you are currently pointing at.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">topology</code></dt>
+<dd><p>The ID of the current model, i.e. which topology 
+you are currently pointing at.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="antimony_combinations.Combinations.topology_dir">
+<em class="property">property </em><code class="sig-name descname">topology_dir</code><a class="headerlink" href="#antimony_combinations.Combinations.topology_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>A full path to a directory for files pertaining 
+to the current topology. Currently only used for 
+generating copasi files.</p>
+<p>Returns:</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>

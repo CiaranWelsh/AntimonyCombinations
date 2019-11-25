@@ -748,13 +748,8 @@ class Combinations:
                 s += str(i) + '\n'
         return s
 
-    def _build_antimony(self, best_parameters=False) -> str:
+    def _build_antimony(self) -> str:
         """
-
-        :param best_parameters: If False, use default parameters. If
-            True, use the best parameters from current fit dir. If a string,
-            then it is a parameter set as antimony string
-        :return:
         """
         s = ''
         s += self.core__functions()
@@ -762,13 +757,8 @@ class Combinations:
         s += self.core__variables()
         s += self._build_reactions()
 
-        if best_parameters is False:
-            s += self.core__parameters()
-        elif best_parameters is True:
-            s += self.get_best_model_parameters_as_antimony()
+        s += self.core__parameters()
 
-        else:
-            raise ValueError
         if self.core__events():
             s += self.core__events()
         if self.core__units():
@@ -823,32 +813,31 @@ class Combinations:
                 end
                 '''
 
-        Returns (str):
+        Returns: str
 
         """
         return None
 
     def core__variables(self):
         """
-        List your variables whilst specifying their compartment.
-
-        Method not to be used directly but overriden in subclass. This is
-        a required method.
+        List your variables whilst specifying their compartment. Method not
+         to be used directly but overriden in subclass. This is a required
+          method.
 
         Examples:
 
-            .. code-block::
-                :linenos:
+        .. code-block::
+            :linenos:
 
-                def core__variables(self):
-                    return '''
-                    compartment Cell = 1;
-                    var A in Cell;
-                    var B in Cell;
-                    const S in Cell;
-                    '''
+            def core__variables(self):
+                return '''
+                compartment Cell = 1;
+                var A in Cell;
+                var B in Cell;
+                const S in Cell;
+                '''
 
-        Returns (str):
+        Returns: str
 
         """
         raise NotImplementedError("You must define your constants, variables and their compartments "
@@ -856,22 +845,21 @@ class Combinations:
 
     def core__reactions(self):
         """
-        List of core reactions; reactions to be shared among all models.
-
-        Do not use directly as this method is designed to be subclassed. This method
+        List of core reactions; reactions to be shared among all models. Do not
+        use directly as this method is designed to be subclassed. This method
         is required.
 
         Examples:
 
-            .. code:block::
-                :linenos:
+        .. code:block::
+            :linenos:
 
-                def core__reactions(self):
-                    return '''
-                    R1: A -> B; k1 * A
-                    '''
+            def core__reactions(self):
+                return '''
+                R1: A -> B; k1 * A
+                '''
 
-        Returns (str):
+        Returns: str
 
         """
         raise NotImplementedError('You must define a core set of reactions using the `core__reactions` '
@@ -884,20 +872,20 @@ class Combinations:
 
         Examples:
 
-            .. code-block::
-                :linenos:
+        .. code-block::
+            :linenos:
 
-                def core__parameters(self):
-                    return '''
-                    A = 10;
-                    B = 20;
+            def core__parameters(self):
+                return '''
+                A = 10;
+                B = 20;
 
-                    k1 = 0.1;
-                    hypothesis_extension_parameter1 = 10;   // will be pruned if not in present model.
+                k1 = 0.1;
+                hypothesis_extension_parameter1 = 10;   // will be pruned if not in present model.
 
-                    random_global_parameter = 50;
-                    '''
-        Returns (str):
+                random_global_parameter = 50;
+                '''
+        Returns: str
 
         """
         raise NotImplementedError('You must define a parameter set (ICs, kinetic parameters, global '
@@ -905,30 +893,27 @@ class Combinations:
 
     def core__events(self):
         """
-        Antimony events string.
-
-        Do not use directly but override in subclass. Optional method.
+        Antimony events string. Do not use directly but override in subclass. Optional method.
 
         Examples:
 
-            .. code-block::
-                :linenos:
+        .. code-block::
+            :linenos:
 
-                def core__events(self):
-                    return '''
-                    event1 at t=1.25 == 2
-                    '''
-        Returns (str):
+            def core__events(self):
+                return '''
+                event1 at t=1.25 == 2
+                '''
+
+        Returns: str
         """
         return None
 
     def core__units(self):
         """
-        Antimony units string.
+        Antimony units string. Do not use directly but override in subclass. Optional method.
 
-        Do not use directly but override in subclass. Optional method.
-
-        Returns:
+        Returns: str
 
         """
         return None

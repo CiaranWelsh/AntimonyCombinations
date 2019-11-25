@@ -697,7 +697,12 @@ class AnotherExampleTests(TearDown):
             ('Feedback1', 'Feedback2')
         ], directory=directory)
 
-    def test(self):
+    def test__output_used_in_docs(self):
+        """
+        Keep for now. You may want to update the docs.
+        Returns:
+
+        """
         print(self.c)
         print(len(self.c))
         print(self.c.to_list()[:4])
@@ -713,7 +718,7 @@ class AnotherExampleTests(TearDown):
         print(first_model)
         print(first_model.to_antimony())
 
-        rr = first_model.to_tellurium()
+        rr = first_model.to_roadrunner()
         print(rr)
         print(rr.simulate(0, 10, 11))
 
