@@ -2,9 +2,21 @@ import unittest
 
 from antimony_combinations.antimony_combinations import Combinations, HypothesisExtension
 import os
+import glob
+from shutil import rmtree
 
 
-class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
+class TearDown(unittest.TestCase):
+
+    def tearDown(self) -> None:
+        test_dir = os.path.dirname(__file__)
+        topology_dirs = glob.glob(os.path.join(test_dir, 'Topology*'))
+        for top in topology_dirs:
+            if os.path.isdir(top):
+                rmtree(top)
+
+
+class CombinationsTestNoMutualExclusivitity(TearDown):
     class TestCombinationModel(Combinations):
 
         def core__functions(self):
@@ -315,8 +327,7 @@ class CombinationsTestNoMutualExclusivitity(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
 
-
-class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
+class CombinationsTestWithMutualExclusivitity(TearDown):
     class TestCombinationModel(Combinations):
 
         def core__functions(self):
@@ -577,7 +588,7 @@ class CombinationsTestWithMutualExclusivitity(unittest.TestCase):
         self.assertEqual(mod4.topology, 4)
 
 
-class AnotherExampleTests(unittest.TestCase):
+class AnotherExampleTests(TearDown):
     class MyCombModel(Combinations):
 
         # no __init__ is necessary as we use the __init__ from parent class
@@ -709,9 +720,6 @@ class AnotherExampleTests(unittest.TestCase):
         print(self.c.list_topologies())
 
         print(self.c.to_copasi())
-
-
-
 
 
 if __name__ == '__main__':
