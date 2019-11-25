@@ -181,6 +181,10 @@ will be picked up and used to combinatorially build sbml models.</p>
 <p>Any <cite>extension_hypothesis__</cite> method should return an instance of the
 <a class="reference internal" href="hypothesis_extension.html#antimony_combinations.HypothesisExtension" title="antimony_combinations.HypothesisExtension"><code class="xref py py-class docutils literal notranslate"><span class="pre">HypothesisExtension</span></code></a> class, which is merely a container for
 some needed information.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Notice the double underscore after <cite>extension_hypothesis</cite></p>
+</div>
 <p>Extension Hypotheses can operate in either <cite>additive</cite> or <cite>replace</cite> mode,
 depending on how the models should be combined. <cite>additive</cite> is simpler. An extension
 hypothesis is additive when your reaction doesn’t override another, or make
@@ -189,7 +193,108 @@ when adding a mass action reaction to a preexisting set of mass action
 reactions.</p>
 <p><cite>replace</cite> mode on the other hand should be used when your
 reaction should be used <em>instead</em> of another reaction.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyCombModel</span><span class="p">(</span><span class="n">Combinations</span><span class="p">):</span>
+<p>Examples:</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyCombModel</span><span class="p">(</span><span class="n">Combinations</span><span class="p">):</span>
 
     <span class="c1"># no __init__ is necessary as we use the __init__ from parent class</span>
 
@@ -291,16 +396,20 @@ reaction should be used <em>instead</em> of another reaction.</p>
             <span class="n">to_replace</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>  <span class="c1"># name of reaction we want to replace</span>
         <span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Now that we have built a Combinations subclass we
 can use it as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">project_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">MyCombModel</span><span class="p">(</span><span class="n">mutually_exclusive_reactions</span><span class="o">=</span><span class="p">[</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;Feedback1&#39;</span><span class="p">,</span> <span class="s1">&#39;Feedback2&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">],</span> <span class="n">directory</span><span class="o">=</span><span class="n">project_root</span>       <span class="c1"># optionally specify project root</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">project_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">MyCombModel</span><span class="p">(</span><span class="n">mutually_exclusive_reactions</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;Feedback1&#39;</span><span class="p">,</span> <span class="s1">&#39;Feedback2&#39;</span><span class="p">)</span>
+    <span class="p">],</span> <span class="n">directory</span><span class="o">=</span><span class="n">project_root</span>       <span class="c1"># optionally specify project root</span>
+<span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>MyCombModel behaves like an iterator, though it doesn’t
 store all model topologies on the outset but builds models
 of the fly as the <cite>topology</cite> attribute is incremented. Topology

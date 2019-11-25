@@ -81,6 +81,10 @@ class Combinations:
     :py:class:`HypothesisExtension` class, which is merely a container for
     some needed information.
 
+    .. note::
+
+        Notice the double underscore after `extension_hypothesis`
+
     Extension Hypotheses can operate in either `additive` or `replace` mode,
     depending on how the models should be combined. `additive` is simpler. An extension
     hypothesis is additive when your reaction doesn't override another, or make
@@ -92,10 +96,10 @@ class Combinations:
     reaction should be used *instead* of another reaction.
 
 
-    Examples
-    ========
+    Examples:
 
     .. code-block:: python
+        :linenos:
 
         class MyCombModel(Combinations):
 
