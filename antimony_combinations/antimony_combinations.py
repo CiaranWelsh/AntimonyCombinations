@@ -821,8 +821,8 @@ class Combinations:
     def core__variables(self):
         """
         List your variables whilst specifying their compartment. Method not
-         to be used directly but overriden in subclass. This is a required
-          method.
+        to be used directly but overriden in subclass. This is a required
+        method.
 
         Examples:
 
