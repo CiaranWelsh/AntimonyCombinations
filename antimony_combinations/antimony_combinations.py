@@ -2,6 +2,8 @@ import site, os, glob
 import pandas, numpy
 import re
 import tellurium as te
+import roadrunner as rr
+import typing
 
 # site.addsitedir(r'/home/ncw135/Documents/pycotools3')
 # site.addsitedir(r'D:\pycotools3')
@@ -21,6 +23,7 @@ mpl_logger.setLevel(logging.WARNING)
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger(__name__)
 
+tuple_list = typing.List[typing.Tuple[typing.AnyStr]]
 
 class HypothesisExtension:
     """
@@ -388,8 +391,22 @@ class Combinations:
     but this is planned for the near future.
     """
 
-    def __init__(self, mutually_exclusive_reactions=[],
-                 directory=None):
+    def __init__(self,
+                 mutually_exclusive_reactions: tuple_list = [],
+                 directory: typing.Optional[str] = None) -> None:
+        """
+
+        Args:
+            mutually_exclusive_reactions:
+                An arbitrary length list of tuples of pairs that are names
+                of reactions that should never occur together in the same model.
+                Defaults to an empty list.
+            directory:
+                Root directory for analysis. The default is the directory
+                containing the script being run or the current working directory
+                of the interpreter.
+        """
+
         self.mutually_exclusive_reactions = mutually_exclusive_reactions
         if self.mutually_exclusive_reactions is not None:
             if not isinstance(self.mutually_exclusive_reactions, list):
@@ -463,13 +480,13 @@ class Combinations:
                     raise ValueError('expected an integer for index. Got "{}"'.format(type(i)))
             return [deepcopy(self[i]) for i in item]
 
-    def to_list(self):
+    def to_list(self) -> list:
         return [deepcopy(self[i]) for i in range(len(self))]
 
-    def items(self):
+    def items(self) -> list:
         return [(i, deepcopy(self[i])) for i in range(len(self))]
 
-    def _model_variant_reactions(self):
+    def _model_variant_reactions(self) -> typing.Tuple[typing.Dict[int, str], str]:
         """
         Get all methods that begin with 'extension_hypothesis' and return their values in a dict[number] = reaction_string
 
@@ -494,36 +511,36 @@ class Combinations:
         return dct, names
 
     @property
-    def topology(self):
+    def topology(self) -> int:
         return self._topology
 
     @topology.setter
-    def topology(self, new):
+    def topology(self, new) -> None:
         assert isinstance(new, int)
         self._topology = new
 
     @property
-    def topology_dir(self):
+    def topology_dir(self) -> str:
         d = os.path.join(self.directory, 'Topology{}'.format(self.topology))
         if not os.path.isdir(d):
             os.makedirs(d)
         return d
 
     @property
-    def time_course_graphs(self):
+    def time_course_graphs(self) -> str:
         d = os.path.join(self.topology_dir, 'TimeCourseSimulations')
         if not os.path.isdir(d):
             os.makedirs(d)
         return d
 
     @property
-    def copasi_file(self):
+    def copasi_file(self) -> str:
         return os.path.join(self.topology_dir, 'topology{}.cps'.format(self.topology))
 
-    def to_copasi(self):
+    def to_copasi(self) -> model.Model:
         return model.loada(self.to_antimony(), self.copasi_file)
 
-    def list_topologies(self):
+    def list_topologies(self) -> pandas.DataFrame:
         topologies = OrderedDict()
         comb = self._get_combinations()
 
@@ -537,13 +554,13 @@ class Combinations:
         df.index.name = 'ModelID'
         return df
 
-    def to_tellurium(self):
+    def to_tellurium(self) -> rr.ExecutableModel:
         return te.loada(self.to_antimony())
 
-    def to_antimony(self):
+    def to_antimony(self) -> str:
         return self._build_antimony()
 
-    def get_all_parameters_as_list(self):
+    def get_all_parameters_as_list(self) -> typing.List[str]:
         all_parameters = self.core__parameters().split('\n')
         all_parameters = [i.strip() for i in all_parameters]
         all_parameters = [re.findall('^\w+', i) for i in all_parameters]
@@ -551,10 +568,10 @@ class Combinations:
         all_parameters = [i[0] for i in all_parameters]
         return all_parameters
 
-    def get_hypotheses(self):
+    def get_hypotheses(self) -> typing.List[str]:
         return self.list_topologies().loc[self.topology][0].split('__')
 
-    def get_reaction_names(self):
+    def get_reaction_names(self) -> typing.List[str]:
         reactions = self.core__reactions().split('\n')
         reactions = [i.strip() for i in reactions]
         reactions = [i for i in reactions if i]
@@ -562,7 +579,7 @@ class Combinations:
         names = [re.findall('(.*):', i)[0] for i in reactions]
         return names
 
-    def _get_combinations(self):
+    def _get_combinations(self) -> typing.List[typing.Tuple[int]]:
         # convert mutually exclusive reactions to numerical value
         mut_excl_list = []
         for mi1, mi2 in self.mutually_exclusive_reactions:
@@ -603,7 +620,7 @@ class Combinations:
                     perm_list2.append(model_comb)
         return perm_list2
 
-    def _build_reactions(self):
+    def _build_reactions(self) -> str:
         """
         Build reactions using two mechanisms. 1) additive. When a HypothesisExtension class is marked as
         additive we can simply add the reaction to the bottom of the list of reactions. 2) replace. Alternatively
@@ -644,7 +661,7 @@ class Combinations:
                 s += str(i) + '\n'
         return s
 
-    def _build_antimony(self, best_parameters=False):
+    def _build_antimony(self, best_parameters=False) -> str:
         """
 
         :param best_parameters: If False, use default parameters. If
@@ -681,7 +698,7 @@ class Combinations:
                     s = re.sub(useless_parameter + '.*\n', '', s)
         return s
 
-    def _default_parameter_set_as_dict(self):
+    def _default_parameter_set_as_dict(self) -> typing.Dict[str, float]:
         string = self.core__parameters()
         strings = string.split('\n')
         dct = OrderedDict()
@@ -703,39 +720,128 @@ class Combinations:
         return dct
 
     def core__functions(self):
+        """
+        An optional set of functions for use in rate laws. Do not use directly
+        but instead override in subclass.
+
+        For example:
+
+        .. code-block::
+            :linenos:
+
+            def core__functions(self):
+                return '''
+                function MichaelisMenten(vmax, km, s)
+                    vmax * s / (km + s)
+                end
+                '''
+
+        Returns (str):
+
+        """
         return None
 
     def core__variables(self):
+        """
+        List your variables whilst specifying their compartment.
+
+        Method not to be used directly but overriden in subclass. This is
+        a required method.
+
+        Examples:
+
+            .. code-block::
+                :linenos:
+
+                def core__variables(self):
+                    return '''
+                    compartment Cell = 1;
+                    var A in Cell;
+                    var B in Cell;
+                    const S in Cell;
+                    '''
+
+        Returns (str):
+
+        """
         raise NotImplementedError("You must define your constants, variables and their compartments "
                                   "by defining a `core__variables` method")
 
     def core__reactions(self):
+        """
+        List of core reactions; reactions to be shared among all models.
+
+        Do not use directly as this method is designed to be subclassed. This method
+        is required.
+
+        Examples:
+
+            .. code:block::
+                :linenos:
+
+                def core__reactions(self):
+                    return '''
+                    R1: A -> B; k1 * A
+                    '''
+
+        Returns (str):
+
+        """
         raise NotImplementedError('You must define a core set of reactions using the `core__reactions` '
                                   'method.')
 
     def core__parameters(self):
+        """
+        Parameter list. Do not use directly but over ride in subclass. This method
+        is required.
+
+        Examples:
+
+            .. code-block::
+                :linenos:
+
+                def core__parameters(self):
+                    return '''
+                    A = 10;
+                    B = 20;
+
+                    k1 = 0.1;
+                    hypothesis_extension_parameter1 = 10;   // will be pruned if not in present model.
+
+                    random_global_parameter = 50;
+                    '''
+        Returns (str):
+
+        """
         raise NotImplementedError('You must define a parameter set (ICs, kinetic parameters, global '
                                   'quantities, compartment volumes) using the `core__parameters` method')
 
     def core__events(self):
         """
-        D = 0
-        T = 1
-        AZD at t=1.25 == 2
-        AZD at t=24 == 3
-        AZD at t=48 == 4
-        AZD at t=72 == 5
-        MK2206 at t=1.25 == 6
-        MK2206 at t=24 == 7
-        MK2206 at t=48 == 8
-        MK2206 at t=72 == 9
-        MK2206 and AZD at t=24  == 10
-        MK2206 and AZD at t=48 == 11
-        MK2206 and AZD at t=72 == 12
+        Antimony events string.
 
-        :return:
+        Do not use directly but override in subclass. Optional method.
+
+        Examples:
+
+            .. code-block::
+                :linenos:
+
+                def core__events(self):
+                    return '''
+                    event1 at t=1.25 == 2
+                    '''
+        Returns (str):
         """
         return None
 
     def core__units(self):
+        """
+        Antimony units string.
+
+        Do not use directly but override in subclass. Optional method.
+
+        Returns:
+
+        """
         return None
