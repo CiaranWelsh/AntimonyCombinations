@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>antimony_combinations.Combinations &mdash; AntimonyCombinations 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> AntimonyCombinations
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AntimonyCombinations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li><code class="xref py py-class docutils literal notranslate"><span class="pre">antimony_combinations.Combinations</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="antimony-combinations-combinations">
+<h1><a class="reference internal" href="#antimony_combinations.Combinations" title="antimony_combinations.Combinations"><code class="xref py py-class docutils literal notranslate"><span class="pre">antimony_combinations.Combinations</span></code></a><a class="headerlink" href="#antimony-combinations-combinations" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="antimony_combinations.Combinations">
+<em class="property">class </em><code class="sig-prename descclassname">antimony_combinations.</code><code class="sig-name descname">Combinations</code><span class="sig-paren">(</span><em class="sig-param">directory</em>, <em class="sig-param">mutually_exclusive_reactions=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#antimony_combinations.Combinations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds combinations of SBML model using antimony</p>
+<p>Create every combination of core hypothesis and extension hypotheses and creates
+SBML models using antimony from the tellurium package.</p>
+<p><a class="reference internal" href="#antimony_combinations.Combinations" title="antimony_combinations.Combinations"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combinations</span></code></a> is designed to be subclassed. The necessary user input
+is given by overriding core functions and providing hypothesis extensions.</p>
+<p>The following methods must be implemented:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__reactions()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__parameters()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__variables()</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>However the following methods are optional:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__functions()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__events()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">core__units()</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>Each of these methods should return a valid antimony string since these strings
+are used to build up a full antimony model.</p>
+<p>Extension hypotheses are added by adding methods to your subclass that
+begin with <cite>extension_hypothesis__</cite>. Any method that begins with <cite>extension_hypothesis__</cite>
+will be picked up and used to combinatorially build sbml models.</p>
+<p>Any <cite>extension_hypothesis__</cite> method should return an instance of the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">HypothesisExtension</span></code> class, which is merely a container for
+some needed information.</p>
+<p>Extension Hypotheses can operate in either <cite>additive</cite> or <cite>replace</cite> mode,
+depending on how the models should be combined. <cite>additive</cite> is simpler. An extension
+hypothesis is additive when your reaction doesn’t override another, or make
+another reaction superflous. Examples of such instances might be
+when adding a mass action reaction to a preexisting set of mass action
+reactions.</p>
+<p><cite>replace</cite> mode on the other hand should be used when your
+reaction should be used <em>instead</em> of another reaction.</p>
+<p>Here is an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyCombModel</span><span class="p">(</span><span class="n">Combinations</span><span class="p">):</span>
+
+    <span class="c1"># no __init__ is necessary as we use the __init__ from parent class</span>
+
+    <span class="k">def</span> <span class="nf">core__functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;&#39; &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">core__variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        compartment Cell;</span>
+<span class="s1">        var A in Cell;</span>
+<span class="s1">        var pA in Cell;</span>
+<span class="s1">        var B in Cell;</span>
+<span class="s1">        var pB in Cell;</span>
+<span class="s1">        var C in Cell;</span>
+<span class="s1">        var pC in Cell;</span>
+
+<span class="s1">        const S in Cell</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">core__reactions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        R1f: A -&gt; pA; k1f*A*S;</span>
+<span class="s1">        R2f: B -&gt; pB; k2f*B*A;</span>
+<span class="s1">        R3f: C -&gt; pC; k3f*C*B;</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">core__parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        k1f    = 0.1;</span>
+<span class="s1">        k2f    = 0.1;</span>
+<span class="s1">        k3f    = 0.1;</span>
+
+<span class="s1">        k2b    = 0.1;</span>
+<span class="s1">        k3b    = 0.1;</span>
+<span class="s1">        VmaxB  = 0.1;</span>
+<span class="s1">        kmB    = 0.1;</span>
+<span class="s1">        VmaxA  = 0.1;</span>
+<span class="s1">        kmA    = 0.1;</span>
+<span class="s1">        k4     = 0.1;</span>
+
+<span class="s1">        S = 1;</span>
+<span class="s1">        A = 10;</span>
+<span class="s1">        pA = 0;</span>
+<span class="s1">        B = 10;</span>
+<span class="s1">        pB = 0;</span>
+<span class="s1">        C = 10;</span>
+<span class="s1">        pC = 0;</span>
+<span class="s1">        Cell = 1;</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">core__units</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Not needed for now</span>
+
+    <span class="k">def</span> <span class="nf">core__events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># No events needed</span>
+
+    <span class="k">def</span> <span class="nf">extension_hypothesis__additive1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">HypothesisExtension</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;AdditiveReaction1&#39;</span><span class="p">,</span>
+            <span class="n">reaction</span><span class="o">=</span><span class="s1">&#39;pB -&gt; B&#39;</span><span class="p">,</span>
+            <span class="n">rate_law</span><span class="o">=</span><span class="s1">&#39;k2b * pB&#39;</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;additive&#39;</span><span class="p">,</span>
+            <span class="n">to_replace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># not needed for additive mode</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">extension_hypothesis__additive2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">HypothesisExtension</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;AdditiveReaction2&#39;</span><span class="p">,</span>
+            <span class="n">reaction</span><span class="o">=</span><span class="s1">&#39;pC -&gt; C&#39;</span><span class="p">,</span>
+            <span class="n">rate_law</span><span class="o">=</span><span class="s1">&#39;k3b * C&#39;</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;additive&#39;</span><span class="p">,</span>
+            <span class="n">to_replace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># not needed for additive mode</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">extension_hypothesis__replace_reaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">HypothesisExtension</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ReplaceReaction&#39;</span><span class="p">,</span>
+            <span class="n">reaction</span><span class="o">=</span><span class="s1">&#39;pB -&gt; B&#39;</span><span class="p">,</span>
+            <span class="n">rate_law</span><span class="o">=</span><span class="s1">&#39;VmaxB * pB / (kmB + pB)&#39;</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span>
+            <span class="n">to_replace</span><span class="o">=</span><span class="s1">&#39;R2f&#39;</span><span class="p">,</span>  <span class="c1"># name of reaction we want to replace</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">extension_hypothesis__feedback1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">HypothesisExtension</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Feedback1&#39;</span><span class="p">,</span>
+            <span class="n">reaction</span><span class="o">=</span><span class="s1">&#39;pA -&gt; A&#39;</span><span class="p">,</span>
+            <span class="n">rate_law</span><span class="o">=</span><span class="s1">&#39;VmaxA * pA / (kmA + pA)&#39;</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;additive&#39;</span><span class="p">,</span>
+            <span class="n">to_replace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># name of reaction we want to replace</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">extension_hypothesis__feedback2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">HypothesisExtension</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Feedback2&#39;</span><span class="p">,</span>
+            <span class="n">reaction</span><span class="o">=</span><span class="s1">&#39;pA -&gt; A&#39;</span><span class="p">,</span>
+            <span class="n">rate_law</span><span class="o">=</span><span class="s1">&#39;k4 * pA&#39;</span><span class="p">,</span>  <span class="c1"># mass action variant</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;additive&#39;</span><span class="p">,</span>
+            <span class="n">to_replace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># name of reaction we want to replace</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>Now that we have built a Combinations subclass we
+can use it as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+<span class="go">MyCombModel(topology=0)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">))</span>
+<span class="go">24</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to_list</span><span class="p">()[:</span><span class="mi">4</span><span class="p">])</span>
+<span class="go">[MyCombModel(topology=0),</span>
+<span class="go"> MyCombModel(topology=1),</span>
+<span class="go"> MyCombModel(topology=2),</span>
+<span class="go"> MyCombModel(topology=3)]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="go">MyCombModel(topology=0)</span>
+<span class="go">MyCombModel(topology=1)</span>
+<span class="go">MyCombModel(topology=2)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="go">0 MyCombModel(topology=0)</span>
+<span class="go">1 MyCombModel(topology=1)</span>
+<span class="go">2 MyCombModel(topology=2)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">first_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">first_model</span><span class="p">)</span>
+<span class="go">MyCombModel(topology=0)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">first_model</span><span class="o">.</span><span class="n">to_antimony</span><span class="p">())</span>
+<span class="go">model MyCombModelTopology0</span>
+<span class="go">    compartment Cell;</span>
+<span class="go">    var A in Cell;</span>
+<span class="go">    var pA in Cell;</span>
+<span class="go">    var B in Cell;</span>
+<span class="go">    var pB in Cell;</span>
+<span class="go">    var C in Cell;</span>
+<span class="go">    var pC in Cell;</span>
+<span class="go">    const S in Cell</span>
+<span class="go">    R1f: A -&gt; pA; k1f*A*S;</span>
+<span class="go">    R2f: B -&gt; pB; k2f*B*A;</span>
+<span class="go">    R3f: C -&gt; pC; k3f*C*B;</span>
+<span class="go">    k1f    = 0.1;</span>
+<span class="go">    k2f    = 0.1;</span>
+<span class="go">    k3f    = 0.1;</span>
+<span class="go">    S = 1;</span>
+<span class="go">    A = 10;</span>
+<span class="go">    pA = 0;</span>
+<span class="go">    B = 10;</span>
+<span class="go">    pB = 0;</span>
+<span class="go">    C = 10;</span>
+<span class="go">    pC = 0;</span>
+<span class="go">    Cell = 1;</span>
+<span class="go">end</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rr</span> <span class="o">=</span> <span class="n">first_model</span><span class="o">.</span><span class="n">to_tellurium</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span>
+<span class="go">&lt;roadrunner.RoadRunner() {</span>
+<span class="go">&#39;this&#39; : 0x555a52c8cb90</span>
+<span class="go">&#39;modelLoaded&#39; : true</span>
+<span class="go">&#39;modelName&#39; :</span>
+<span class="go">&#39;libSBMLVersion&#39; : LibSBML Version: 5.17.2</span>
+<span class="go">&#39;jacobianStepSize&#39; : 1e-05</span>
+<span class="go">&#39;conservedMoietyAnalysis&#39; : false</span>
+<span class="go">&#39;simulateOptions&#39; :</span>
+<span class="go">&lt; roadrunner.SimulateOptions()</span>
+<span class="go">{</span>
+<span class="go">&#39;this&#39; : 0x555a5309cd00,</span>
+<span class="go">&#39;reset&#39; : 0,</span>
+<span class="go">&#39;structuredResult&#39; : 0,</span>
+<span class="go">&#39;copyResult&#39; : 1,</span>
+<span class="go">&#39;steps&#39; : 50,</span>
+<span class="go">&#39;start&#39; : 0,</span>
+<span class="go">&#39;duration&#39; : 5</span>
+<span class="go">}&gt;,</span>
+<span class="go">&#39;integrator&#39; :</span>
+<span class="go">&lt; roadrunner.Integrator() &gt;</span>
+<span class="go">  name: cvode</span>
+<span class="go">  settings:</span>
+<span class="go">      relative_tolerance: 0.000001</span>
+<span class="go">      absolute_tolerance: 0.000000000001</span>
+<span class="go">                   stiff: true</span>
+<span class="go">       maximum_bdf_order: 5</span>
+<span class="go">     maximum_adams_order: 12</span>
+<span class="go">       maximum_num_steps: 20000</span>
+<span class="go">       maximum_time_step: 0</span>
+<span class="go">       minimum_time_step: 0</span>
+<span class="go">       initial_time_step: 0</span>
+<span class="go">          multiple_steps: false</span>
+<span class="go">      variable_step_size: false</span>
+</pre></div>
+</div>
+<p>}&gt;</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+<span class="go">    time,     [A],     [pA],       [B],    [pB],     [C],    [pC]</span>
+<span class="go"> [[    0,      10,        0,        10,       0,      10,       0],</span>
+<span class="go">  [    1, 9.04837, 0.951626,   3.86113, 6.13887, 5.27257, 4.72743],</span>
+<span class="go">  [    2, 8.18731,  1.81269,   1.63214, 8.36786, 4.07751, 5.92249],</span>
+<span class="go">  [    3, 7.40818,  2.59182,  0.748842, 9.25116, 3.64313, 6.35687],</span>
+<span class="go">  [    4,  6.7032,   3.2968,  0.370018, 9.62998, 3.45361, 6.54639],</span>
+<span class="go">  [    5, 6.06531,  3.93469,  0.195519, 9.80448,  3.3609,  6.6391],</span>
+<span class="go">  [    6, 5.48812,  4.51188,  0.109779, 9.89022, 3.31158, 6.68842],</span>
+<span class="go">  [    7, 4.96585,  5.03415, 0.0651185, 9.93488,  3.2835,  6.7165],</span>
+<span class="go">  [    8, 4.49329,  5.50671, 0.0405951,  9.9594, 3.26657, 6.73343],</span>
+<span class="go">  [    9,  4.0657,   5.9343, 0.0264712, 9.97353, 3.25584, 6.74416],</span>
+<span class="go">  [   10, 3.67879,  6.32121, 0.0179781, 9.98202, 3.24872, 6.75128]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Ciaran Welsh
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

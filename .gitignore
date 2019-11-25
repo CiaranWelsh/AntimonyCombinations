@@ -4,5 +4,4 @@ __pycache__
 *.cps
 *.sbml
 *.txt
-build
 *.log

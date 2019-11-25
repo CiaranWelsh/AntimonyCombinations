@@ -282,7 +282,7 @@ class Combinations:
     MyCombModel(topology=1)
     MyCombModel(topology=2)
 
-    Or use the items method, which is similar to dict.items().
+    Or use the items method, which is similar to `dict.items()`.
 
     >>> for i, model in c.items()[:3]:
     >>> ... print(i, model)
@@ -291,6 +291,7 @@ class Combinations:
     2 MyCombModel(topology=2)
 
     Selecting a single model, we can create an antimony string
+
     >>> first_model = c[0]
     >>> print(first_model.to_antimony())
     model MyCombModelTopology0
