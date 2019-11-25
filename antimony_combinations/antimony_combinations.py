@@ -95,7 +95,7 @@ class Combinations:
     Examples
     ========
 
-    .. code-block::
+    .. code-block:: python
 
         class MyCombModel(Combinations):
 
