@@ -3,5 +3,6 @@
 __pycache__
 *.cps
 *.sbml
-*.txt
 *.log
+*.egg-info
+dist

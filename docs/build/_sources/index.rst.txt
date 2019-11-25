@@ -8,7 +8,16 @@ Welcome to AntimonyCombinations's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
    combinations.rst
    hypothesis_extension.rst
 
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

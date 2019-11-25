@@ -1,17 +1,17 @@
 language: python
+env:
+  - CODECOV_TOKEN="ff53ff89-7523-4946-97ee-347660e16ac9"
 before_install:
   - wget https://github.com/copasi/COPASI/releases/download/Build-207/COPASI-4.25.207-Linux-64bit.tar.gz -O /tmp/copasi.tar.gz
   - tar -xzvf /tmp/copasi.tar.gz
   - export PATH=$PATH:$PWD/COPASI-4.25.207-Linux-64bit/bin/
 python:
   - "3.6"
-  - "3.7"
-  - "3.8"
 install:
   - pip install .
-  - pip install -r requirements.txt
-  - pip install nose
+  - pip install -r $PWD/requirements.txt
+  - pip install nose codecov coverage
 script:
-  - nosetests tests/tests.py
+  - nosetests --with-coverage
 after_success:
-  - coveralls
+  - codecov -t $CODECOV_TOKEN

@@ -1,0 +1,4 @@
+pandas
+pycotools3==2.1.11
+tellurium
+python-coveralls
