@@ -364,7 +364,6 @@ class Combinations:
            initial_time_step: 0
               multiple_steps: false
           variable_step_size: false
-
     }>
 
     >>> print(rr.simulate(0, 10, 11))
