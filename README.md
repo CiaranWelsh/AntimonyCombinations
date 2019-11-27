@@ -1,7 +1,7 @@
 # AntimonyCombinations
 ![Build Status](https://travis-ci.org/CiaranWelsh/AntimonyCombinations.svg?branch=master&style=flat)
 [![codecov](https://codecov.io/gh/CiaranWelsh/AntimonyCombinations/branch/master/graph/badge.svg)](https://codecov.io/gh/CiaranWelsh/AntimonyCombinations)
-[![docs](https://readthedocs.org/projects/antimonycombinations/badge/?version=latest&style=flat)(https://antimonycombinations.readthedocs.io/en/latest/)]
+[![docs](https://readthedocs.org/projects/antimonycombinations/badge/?version=latest&style=flat)](https://antimonycombinations.readthedocs.io/en/latest/)
 
 `AntimonyCombinations` is a package developed on top of 
 [tellurium](http://tellurium.analogmachine.org/) and 
