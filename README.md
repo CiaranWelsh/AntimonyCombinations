@@ -18,12 +18,11 @@ and hypothesis extensions.
 
 ## Installation
 
-    `$ pip install AntimonyCombinations`
+`$ pip install AntimonyCombinations`
     
 ## Import
 
-    `>>> from antimony_combinations import Combinations, HypothesisExtension`
-
+`>>> from antimony_combinations import Combinations, HypothesisExtension`
 
 ## [See documentation here](https://antimonycombinations.readthedocs.io/en/latest/)
 

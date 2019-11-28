@@ -105,6 +105,13 @@ class Combinations:
     .. code-block:: python
         :linenos:
 
+        # imports
+        from antimony_combinations import Combinations, ExtensionHypothesis
+        # Not needed to actually build the model set but we
+        #  might as well import tellurium and pycotools since we'll probably
+        #  want to use them for working with the model set.
+        import telluirum as te
+
         class MyCombModel(Combinations):
 
             # no __init__ is necessary as we use the __init__ from parent class
