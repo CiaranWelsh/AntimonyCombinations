@@ -7,9 +7,9 @@ Welcome to AntimonyCombinations's documentation!
 ================================================
 
 `AntimonyCombinations` is a package developed on top of
-[tellurium](http://tellurium.analogmachine.org/) and
-[antimony](http://antimony.sourceforge.net/) for building
-[sbml](http://sbml.org/Main_Page) models in a combinatorial
+`tellurium <http://tellurium.analogmachine.org/>`_ and
+`antimony <http://antimony.sourceforge.net/>`_ for building
+`sbml <http://sbml.org/Main_Page>`_ models in a combinatorial
 way.
 
 The idea is that you have a core model which you
@@ -22,14 +22,13 @@ and hypothesis extensions.
 Installation
 ------------
 
-    `$ pip install AntimonyCombinations`
+.. highlight::
+
+    $ pip install AntimonyCombinations
 
 
-Import
-------
-
-The pip command uses camel caps but you still import the code using the
-Python convention of separation by `'_'` for package names.
+Importing the package
+---------------------
 
 .. code-block::
    :linenos:
