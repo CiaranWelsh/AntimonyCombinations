@@ -250,7 +250,7 @@ class Combinations:
     extensions we can use :py:meth:`antimony_combinations.get_topologies`,
     which returns a pandas.DataFrame.
 
-    >>> c.get_topolgies()
+    >>> c.get_topologies()
                                                           Topology
     ModelID
     0                                                     Null
