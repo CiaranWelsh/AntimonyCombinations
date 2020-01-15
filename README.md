@@ -27,7 +27,7 @@ and hypothesis extensions.
 ## [See documentation here](https://antimonycombinations.readthedocs.io/en/latest/)
 
 ## Parameter estimations and model selection
-The precursor to this package was designed for a comprehensive model selection problem which used `tellurium` and `antimony` for constructing `sbml` models, and `pycotools3` and `COPASI` for configuring and running parameter estimations. This can be, but is not currently supported. It is on the `todo` list. 
+This package was designed for a comprehensive model selection problem which used `tellurium` and `antimony` for constructing `sbml` models, and `pycotools3` and `COPASI` for configuring and running parameter estimations. This can be, but is not currently supported. It is on the `todo` list. 
 
 Since connecting with COPASI in this way isn't ideal it would also be advantageous to support a second backend that doesn't rely on COPASI. This is a work in progress. 
 
